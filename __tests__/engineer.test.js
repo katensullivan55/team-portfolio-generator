@@ -1,24 +1,25 @@
-const Engineer = require('../lib/Engineer');
+const Engineer = require("../lib/engineer");
+const employeeData = "Shawn";
+const idData = 555;
+const emailData = "shawnSmith@placeholder.net";
+const githubUser = "Shawn555";
 
-// creates object
-describe('create an engineer object', () => {
-    it('creates the engineer object from data', () => {
-    const engineer = new Engineer('Adam', 100, 'mclanea92@gmail.com', 'mclanea92');
-    expect(engineer.github).toEqual(expect.any(String));
-})});
+test("get engineer github username", () => {
 
-// gets github info
-describe('get github from data of engineer', () => {
-    it('gets github from data of engineer', () => {
-    const engineer = new Engineer('Adam', 100, 'mclanea92@gmail.com', 'mclanea92');
-    expect(engineer.getGithub()).toEqual(expect.stringContaining(engineer.github.toString()));
-})});
+    const employee = new Engineer (employeeData,idData,emailData, githubUser); 
+    expect(employee.githubUser).toBe(this.github);
+});
 
-// if selected engineer then grabs it here for test with addition of github
-describe('get role of employee', () => {
-    it('gets the role of employee from data', () => {
-    
-    const engineer = new Engineer('Adam', 100, 'mclanea92@gmail.com', 'mclanea92');
+//generate name with getGithub()
+test("getGithub()", () => {
+    const employee = new Engineer (employeeData,idData,emailData, githubUser); 
+    expect(employee.getGithub()).toBe(this.github);
+});
 
-    expect(engineer.getRole()).toEqual('Engineer');
-})});
+//getrole ()
+
+test("getRole()", () => {
+  
+   const employee = new Engineer (employeeData,idData,emailData, githubUser); 
+    expect(employee.getRole()).toEqual(Engineer);
+});

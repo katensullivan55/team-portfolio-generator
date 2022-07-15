@@ -1,15 +1,25 @@
-const Manager = require('../lib/Manager');
+const Manager = require("../lib/manager");
+const employeeData = "Shawn";
+const idData = 555;
+const emailData = "shawnSmith@placeholder.net";
+const officeNumber = "7555";
 
-// creates an object
-describe('creates object for manager', () => {
-    it('creates an object for manager fromd data', () => {
-    const manager = new Manager('Adam', 100, 'mclanea92@gmail.com', 2158289166);
-    expect(manager.officeNumber).toEqual(expect.any(Number)); 
-})});
+test("get manager office number", () => {
 
-// if selected manager then grabs it here for test with addition of phone number
-describe('gets manager role', () => {
-    it('gets the manager role from data', () => {
-    const manager = new Manager('Adam', 100, 'mclanea92@gmail.com', 2158289166);
-    expect(manager.getRole()).toEqual('Manager');
-})});
+    const employee = new Manager (employeeData,idData,emailData,officeNumber); 
+    expect(employee.officeNumber).toEqual(this.office);
+});
+
+//generate office number, w/ getOfficeNumber()
+test("getOfficeNumber()", () => {
+    const employee = new Manager (employeeData,idData,emailData,officeNumber); 
+    expect(employee.getOfficeNumber()).toEqual(this.office);
+});
+
+//getRole ()
+
+test("getRole()", () => {
+  
+   const employee = new Manager (employeeData,idData,emailData,officeNumber); 
+    expect(employee.getRole()).toEqual(Manager);
+});

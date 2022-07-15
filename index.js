@@ -1,146 +1,190 @@
-// link to page creation
-const generateHTML = require('./src/generate-site');
+// Required node_modules
+const inquirer = require("inquirer");
+const fs = require("fs");
 
-// team profiles
-const Manager = require('./lib/Manager');
-const Intern = require('./lib/Intern');
-const Engineer = require('./lib/Engineer');
+// Link to generate-site.js
 
-// node modules & fs for creation of html
-const fs = require('fs');
-const inquirer = require('inquirer');
+const generateSite = require("./src/generate-site");
 
-const teamArray = [];
+// Imports the team members
 
-// this is where the manager questions are asked for the page
-const addManager = () => {
-    return inquirer.prompt ([
+const Manager = require("./lib/manager");
+const Engineer = require("./lib/engineer");
+const intern = require("./lib/intern");
+
+
+
+
+// Creates an array for the team members
+let teamMems = [];
+
+
+// add Manager
+
+function addManager() {
+    inquirer.prompt ([
         {
-            type: 'input',
-            name: 'name',
-            message: 'Who is the manager?', 
-            validate: nameInput => {
-                if (nameInput) {
-                    return true;
-                } else {
-                    console.log ("Please enter manager name");
-                    return false; 
-                }
-            }
+            type: "input",
+            name: "managerName",
+            message: "Enter Manger's name:"
+        },
+
+      
+        {
+            type: "input",
+            name: "managerId",
+            message: "Enter Manger's id:"
+        },
+
+        
+        {
+            type: "input",
+            name: "managerEmail",
+            message: "Enter Manager's email address:"
         },
         {
-            type: 'input',
-            name: 'id',
-            message: "Please enter managers ID number.",
+            type: "input",
+            name: "managerOfficeNumber",
+            message: "Enter Manager's office number:"
         },
-        {
-            type: 'input',
-            name: 'email',
-            message: "Please enter the manager's email.",
-        },
-        {
-            type: 'input',
-            name: 'officeNumber',
-            message: "Please enter the manager's phone number",
-        }
     ])
-    .then(managerInput => {
-        const  { name, id, email, officeNumber } = managerInput; 
-        const manager = new Manager (name, id, email, officeNumber);
 
-        teamArray.push(manager); 
-        // console.log(manager); 
-    })
-};
-// this is where the employees are added to the team after the manager selects intern or engineer
-const addEmployee = () => {
-    return inquirer.prompt ([
+    .then(answers => {
+        let managerName, managerId, managerEmail, managerOfficeNumber = answers;
+        console.log(answers);
+        const manager = new Manager (managerName, managerId, managerEmail, managerOfficeNumber);
+
+        teamMems.push(manager);
+
+        //after manager add more team members 
+        addTeamMem();
+
+})
+
+}
+
+
+// add Intern
+
+function addIntern() {
+    inquirer.prompt ([
         {
-            type: 'list',
-            name: 'role',
-            message: 'Please choose employee role',
-            choices: ['Engineer', 'Intern']
+            type: "input",
+            name: "internName",
+            message: "Enter the intern's name:"
+        },
+
+      
+        {
+            type: "input",
+            name: "internId",
+            message: "Enter the intern's id:"
+        },
+
+        
+        {
+            type: "input",
+            name: "internEmail",
+            message: "Enter the intern's email address:"
         },
         {
-            type: 'input',
-            name: 'name',
-            message: 'What is the employees name?',
+            type: "input",
+            name: "internSchoolName",
+            message: "Enter the name of the school your intern is enrolled in:"
         },
-        {
-            type: 'input',
-            name: 'id',
-            message: 'Please enter employee ID number',
-        },
-        {
-            type: 'input',
-            name: 'email',
-            message: 'Please enter employee email address',
-        },
-        {    type: 'input',
-            name: 'github',
-            message: 'Please enter github username',
-            when: (input) => input.role === 'Engineer',
-        },
-        {
-            type: 'input',
-            name: 'school',
-            mesage: 'Please enter college for intern',
-            when: (input) => input.role === 'Intern',
-        },
-        {
-            type: 'confirm',
-            name: 'confirmAddEmployee',
-            message: 'Would you like to add another employee?',
-            default: false
-        }
     ])
-    .then(employeeData => {
-        let {name, id, email, role, github, school, confirmAddEmployee} = employeeData;
-        let employee = ''; 
 
-        if (role === 'Engineer') {
-            employee = new Engineer (name, id, email, github);
+    .then(answers => {
+        let internName, internId, internEmail, internSchoolName = answers; 
+        console.log(answers);
+        const Intern = new intern (internName, internId, internEmail, internSchoolName);
 
-            // console.log(employee);
-        }
-        else if (role === 'Intern') {
-            employee = new Intern (name, id, email, school);
-            // console.log(employee);
-        }
+        teamMems.push(Intern);
 
-        teamArray.push(employee);
-        if (confirmAddEmployee) {
-            return addEmployee(teamArray);
-        } else {
-            return teamArray;
-        }
+        //after manager add more team members 
+        addTeamMem();
+
+})
+
+}
+
+// add engineer
+
+function addEngineer() {
+    inquirer.prompt ([
+        {
+            type: "input",
+            name: "engineerName",
+            message: "Enter the engineer's name:"
+        },
+
+      
+        {
+            type: "input",
+            name: "engineerId",
+            message: "Enter the engineer's id:"
+        },
+
+        
+        {
+            type: "input",
+            name: "engineerEmail",
+            message: "Enter the engineer's email address:"
+        },
+        {
+            type: "input",
+            name: "engineerGithub",
+            message: "Enter the engineer's GitHub username:"
+        },
+    ])
+
+    .then(answers => {
+        let engineerName, engineerId, engineerEmail, engineerGithub = answers;
+        console.log(answers);
+        const engineer = new Engineer (engineerName, engineerId, engineerEmail, engineerGithub);
+
+        teamMems.push(engineer);
+
+        //after manager add more team members 
+        addTeamMem();
+
     })
-};
+
+}
 
 
-// create HTML file with fs
-const writeFile = data => {
-    console.log(data)
-    fs.writeFile('./dist/index.html', data, err => {
-        if (err) {
-            console.log(err);
-            return;
-        } else {
-            console.log('Your team profile page has been created!')
-        }
-    })
-};
-// adds manager first because first questions and then add employees afterwards
-addManager()
-    .then(addEmployee)
-    .then(teamArray => {
-        // console.log(teamArray)
-        return generateHTML(teamArray);
-    })
-    .then(pageHTML => {
-        // console.log(pageHTML)
-        return writeFile(pageHTML);
-    })
-    .catch(err => {
-        console.log(err);
-    });
+function addTeamMem() {
+    inquirer.prompt({
+        type:"list",
+        name:"addTeamMem",
+        message: "Choose the type of team memeber you would like to add:",
+        choices: ["Engineer", "Intern", "I do not want to add any team members right now"]
+ })
+ 
+ .then(answers => {
+    let { addTeamMem } = answers;
+    if (addTeamMem === "Intern") {
+        addIntern();
+    } else if (addTeamMem === "Engineer") {
+        addEngineer();
+    } else if (addTeamMem === "I do not want to add any team members right now") {
+        initPage();
+    }
+})
+}
+
+function initPage() {
+// function to generate HTML page file using file system 
+fs.writeFile("./dist/index.html", generateSite(teamMems), err => {
+    if (err) {
+        return console.error(err);
+    } else {
+        console.log("Congratulations! Your profile has been created! Check out the HTML file to see what was generated!");
+        
+    };
+});
+}
+
+
+
+addManager();
